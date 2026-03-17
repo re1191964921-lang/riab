@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RIAB">
+<meta name="theme-color" content="#0a0a0f">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='40' fill='%230a0a0f'/><text y='130' x='50%25' text-anchor='middle' font-size='110' fill='%2300ff88'>🤖</text></svg>">
+<title>RIAB 理性投資守衛</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Noto+Sans+TC:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════
+   CSS Variables & Reset
+═══════════════════════════════════════════════ */
+:root {
+  --green:   #00ff88;
+  --red:     #ff3b3b;
+  --amber:   #ffaa00;
+  --blue:    #4da6ff;
+  --bg:      #0a0a0f;
+  --bg2:     #13131f;
+  --bg3:     #1c1c2e;
+  --border:  #2a2a40;
+  --text:    #e8e8f0;
+  --muted:   #6b6b8a;
+  --safe-top: env(safe-area-inset-top, 44px);
+  --safe-bot: env(safe-area-inset-bottom, 34px);
+  --font-mono: 'Space Mono', monospace;
+  --font-ui: 'Noto Sans TC', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow-x: hidden; background: var(--bg); color: var(--text); font-family: var(--font-ui); }
+
+/* ═══════════════════════════════════════════════
+   Dynamic Island safe area header
+═══════════════════════════════════════════════ */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  padding-top: var(--safe-top);
+  padding-bottom: var(--safe-bot);
+}
+
+/* ═══════════════════════════════════════════════
+   Top Bar
+═══════════════════════════════════════════════ */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10,10,15,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-icon {
+  width: 36px;
+  height: 36px;
+  background: var(--bg3);
+  border: 1.5px solid var(--green);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.brand-title {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--green);
+  letter-spacing: 1px;
+}
+
+.brand-subtitle {
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+  margin-top: 1px;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sync-btn {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 14px;
+  color: var(--text);
+  font-size: 12px;
+  font-family: var(--font-ui);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  min-height: 44px;
+}
+.sync-btn:active { transform: scale(0.95); background: var(--border); }
+.sync-btn.syncing .sync-icon { animation: spin 1s linear infinite; }
+
+.cnn-badge {
+  background: var(--bg3);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid var(--border);
+}
+.cnn-badge.greed { color: var(--red); border-color: var(--red); }
+.cnn-badge.fear  { color: var(--green); border-color: var(--green); }
+.cnn-badge.neutral { color: var(--amber); }
+
+/* ═══════════════════════════════════════════════
+   Tab Nav
+═══════════════════════════════════════════════ */
+.tab-nav {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-nav::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  flex: 1;
+  min-width: 80px;
+  padding: 14px 8px;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 12px;
+  font-family: var(--font-ui);
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.tab-btn.active {
+  color: var(--green);
+  border-bottom-color: var(--green);
+  font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════════
+   Main content
+═══════════════════════════════════════════════ */
+.content { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.tab-panel { display: none; padding: 16px; }
+.tab-panel.active { display: block; }
+
+/* ═══════════════════════════════════════════════
+   Zone Headers
+═══════════════════════════════════════════════ */
+.zone-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 12px 16px;
+  border-radius: 12px;
+}
+.zone-header.hot  { background: rgba(255,59,59,0.08); border: 1px solid rgba(255,59,59,0.25); }
+.zone-header.wait { background: rgba(77,166,255,0.08); border: 1px solid rgba(77,166,255,0.25); }
+.zone-header.ok   { background: rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.25); }
+
+.zone-title {
+  font-size: 14px;
+  font-weight: 700;
+  flex: 1;
+}
+.zone-header.hot  .zone-title { color: var(--red); }
+.zone-header.wait .zone-title { color: var(--amber); }
+.zone-header.ok   .zone-title { color: var(--green); }
+
+.zone-count {
+  background: var(--bg3);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════════
+   Stock Cards
+═══════════════════════════════════════════════ */
+.stock-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: transform 0.15s, box-shadow 0.15s;
+  min-height: 80px;
+  cursor: pointer;
+}
+.stock-card:active { transform: scale(0.98); }
+
+.stock-card.hot {
+  border-color: rgba(255,59,59,0.5);
+  animation: pulse-red 2s ease-in-out infinite;
+}
+.stock-card.warn { border-color: rgba(255,170,0,0.4); }
+.stock-card.good { border-color: rgba(0,255,136,0.25); }
+
+@keyframes pulse-red {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,59,59,0); }
+  50% { box-shadow: 0 0 0 6px rgba(255,59,59,0.2); }
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  gap: 12px;
+}
+
+.score-ring {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 2.5px solid;
+}
+.score-ring.hot  { border-color: var(--red);   background: rgba(255,59,59,0.1); }
+.score-ring.warn { border-color: var(--amber); background: rgba(255,170,0,0.1); }
+.score-ring.good { border-color: var(--green); background: rgba(0,255,136,0.1); }
+
+.score-num {
+  font-family: var(--font-mono);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+}
+.score-ring.hot  .score-num { color: var(--red); }
+.score-ring.warn .score-num { color: var(--amber); }
+.score-ring.good .score-num { color: var(--green); }
+
+.score-label { font-size: 8px; color: var(--muted); margin-top: 2px; }
+
+.card-info { flex: 1; min-width: 0; }
+.card-code { font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: var(--muted); }
+.card-name { font-size: 16px; font-weight: 700; color: var(--text); margin: 2px 0; }
+.card-rating { font-size: 11px; }
+
+.card-right { text-align: right; flex-shrink: 0; }
+.profit-pct {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+}
+.profit-pct.pos { color: var(--green); }
+.profit-pct.neg { color: var(--red); }
+
+.card-price { font-size: 11px; color: var(--muted); margin-top: 3px; }
+.card-days  { font-size: 11px; color: var(--muted); }
+
+.card-bottom {
+  border-top: 1px solid var(--border);
+  padding: 10px 16px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.mini-stat {
+  flex: 1;
+  text-align: center;
+}
+.mini-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.mini-value { font-size: 13px; font-weight: 700; font-family: var(--font-mono); margin-top: 2px; }
+
+.settle-btn {
+  background: var(--green);
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--font-ui);
+  cursor: pointer;
+  min-height: 44px;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.settle-btn:active { transform: scale(0.95); background: #00cc6e; }
+
+/* ═══════════════════════════════════════════════
+   Bottom Action Bar — 單手操作區
+═══════════════════════════════════════════════ */
+.bottom-bar {
+  position: sticky;
+  bottom: 0;
+  background: rgba(10,10,15,0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  padding: 12px 20px;
+  padding-bottom: max(12px, var(--safe-bot));
+}
+
+.add-stock-btn {
+  width: 100%;
+  background: var(--green);
+  color: #000;
+  border: none;
+  border-radius: 14px;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 900;
+  font-family: var(--font-ui);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 56px;
+  transition: all 0.15s;
+  letter-spacing: 0.5px;
+}
+.add-stock-btn:active { transform: scale(0.98); background: #00cc6e; }
+
+/* ═══════════════════════════════════════════════
+   Modal Overlay
+═══════════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+
+.modal-sheet {
+  width: 100%;
+  background: var(--bg2);
+  border-radius: 24px 24px 0 0;
+  border-top: 1px solid var(--border);
+  padding: 20px 20px;
+  padding-bottom: max(24px, var(--safe-bot));
+  max-height: 92dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.modal-overlay.open .modal-sheet { transform: translateY(0); }
+
+.modal-handle {
+  width: 36px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 0 auto 20px;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 900;
+  margin-bottom: 20px;
+  color: var(--text);
+}
+
+/* ═══════════════════════════════════════════════
+   Form Fields
+═══════════════════════════════════════════════ */
+.form-group { margin-bottom: 16px; }
+.form-label { font-size: 12px; color: var(--muted); font-weight: 600; margin-bottom: 6px; display: block; letter-spacing: 0.5px; text-transform: uppercase; }
+
+.form-input {
+  width: 100%;
+  background: var(--bg3);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: var(--text);
+  font-size: 16px;
+  font-family: var(--font-ui);
+  outline: none;
+  transition: border-color 0.2s;
+  min-height: 52px;
+  caret-color: var(--green);
+}
+.form-input:focus { border-color: var(--green); }
+.form-input.numpad-input { caret-color: transparent; cursor: default; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.select-input {
+  width: 100%;
+  background: var(--bg3);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: var(--text);
+  font-size: 16px;
+  font-family: var(--font-ui);
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  min-height: 52px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6b8a' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+}
+
+.modal-actions { display: flex; gap: 12px; margin-top: 24px; }
+.btn-cancel {
+  flex: 1;
+  background: var(--bg3);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 15px;
+  font-family: var(--font-ui);
+  cursor: pointer;
+  min-height: 52px;
+  transition: all 0.15s;
+}
+.btn-cancel:active { background: var(--border); }
+.btn-confirm {
+  flex: 2;
+  background: var(--green);
+  color: #000;
+  border: none;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 15px;
+  font-weight: 900;
+  font-family: var(--font-ui);
+  cursor: pointer;
+  min-height: 52px;
+  transition: all 0.15s;
+}
+.btn-confirm:active { transform: scale(0.98); background: #00cc6e; }
+.btn-danger {
+  flex: 2;
+  background: var(--red);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 15px;
+  font-weight: 900;
+  font-family: var(--font-ui);
+  cursor: pointer;
+  min-height: 52px;
+  transition: all 0.15s;
+}
+.btn-danger:active { transform: scale(0.98); background: #cc2222; }
+
+/* ═══════════════════════════════════════════════
+   Custom Numeric Keypad
+═══════════════════════════════════════════════ */
+.numpad-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.numpad-overlay.open { opacity: 1; pointer-events: all; }
+
+.numpad-container {
+  width: 100%;
+  background: var(--bg2);
+  border-radius: 24px 24px 0 0;
+  border-top: 1px solid var(--border);
+  padding: 16px 12px;
+  padding-bottom: max(20px, var(--safe-bot));
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.numpad-overlay.open .numpad-container { transform: translateY(0); }
+
+.numpad-display {
+  background: var(--bg3);
+  border-radius: 12px;
+  padding: 14px 20px;
+  margin-bottom: 14px;
+  text-align: right;
+  border: 1px solid var(--border);
+}
+.numpad-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; text-align: left; letter-spacing: 0.5px; }
+.numpad-value { font-family: var(--font-mono); font-size: 32px; font-weight: 700; color: var(--green); min-height: 42px; }
+
+.numpad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.numpad-key {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.1s;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.numpad-key:active { background: var(--border); transform: scale(0.94); }
+.numpad-key.key-0   { grid-column: span 2; }
+.numpad-key.key-del { color: var(--red); font-size: 18px; }
+.numpad-key.key-dot { color: var(--muted); }
+.numpad-key.key-done {
+  background: var(--green);
+  color: #000;
+  font-size: 14px;
+  font-weight: 900;
+  font-family: var(--font-ui);
+  grid-column: span 3;
+  height: 56px;
+  margin-top: 4px;
+  border-color: transparent;
+}
+.numpad-key.key-done:active { background: #00cc6e; }
+
+/* ═══════════════════════════════════════════════
+   Settle Confirm Modal
+═══════════════════════════════════════════════ */
+.settle-detail {
+  background: var(--bg3);
+  border-radius: 12px;
+  padding: 16px;
+  margin: 16px 0;
+}
+.settle-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); }
+.settle-row:last-child { border-bottom: none; }
+.settle-key { font-size: 13px; color: var(--muted); }
+.settle-val { font-size: 13px; font-weight: 700; font-family: var(--font-mono); }
+.settle-val.pos { color: var(--green); }
+.settle-val.neg { color: var(--red); }
+
+/* ═══════════════════════════════════════════════
+   Stats / History Panel
+═══════════════════════════════════════════════ */
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+.stat-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+}
+.stat-card-label { font-size: 11px; color: var(--muted); letter-spacing: 0.5px; text-transform: uppercase; }
+.stat-card-value { font-size: 24px; font-weight: 900; font-family: var(--font-mono); margin-top: 6px; }
+.stat-card-value.pos { color: var(--green); }
+.stat-card-value.neg { color: var(--red); }
+.stat-card-value.neutral { color: var(--text); }
+
+.history-item {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 70px;
+}
+.history-left .code  { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.history-left .name  { font-size: 15px; font-weight: 700; margin: 2px 0; }
+.history-left .dates { font-size: 11px; color: var(--muted); }
+.history-right .pct  { font-family: var(--font-mono); font-size: 20px; font-weight: 700; text-align: right; }
+.history-right .days { font-size: 11px; color: var(--muted); text-align: right; margin-top: 2px; }
+
+/* ═══════════════════════════════════════════════
+   Empty State
+═══════════════════════════════════════════════ */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+}
+.empty-icon { font-size: 56px; margin-bottom: 16px; }
+.empty-text { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+.empty-sub  { font-size: 13px; }
+
+/* ═══════════════════════════════════════════════
+   Toast
+═══════════════════════════════════════════════ */
+.toast {
+  position: fixed;
+  top: calc(var(--safe-top) + 70px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  z-index: 500;
+  opacity: 0;
+  transition: all 0.3s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.success { border-color: var(--green); color: var(--green); }
+.toast.error   { border-color: var(--red); color: var(--red); }
+.toast.info    { border-color: var(--amber); color: var(--amber); }
+
+/* ═══════════════════════════════════════════════
+   Loading
+═══════════════════════════════════════════════ */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  transition: opacity 0.4s;
+}
+.loading-overlay.hidden { opacity: 0; pointer-events: none; }
+.loading-robot { font-size: 56px; animation: bounce 1.2s ease-in-out infinite; }
+.loading-text { font-size: 14px; color: var(--muted); font-family: var(--font-mono); }
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* ═══════════════════════════════════════════════
+   Scrollbar
+═══════════════════════════════════════════════ */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* ═══════════════════════════════════════════════
+   Config panel
+═══════════════════════════════════════════════ */
+.config-item {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.config-key   { font-size: 13px; color: var(--muted); }
+.config-value { font-size: 14px; font-weight: 700; font-family: var(--font-mono); color: var(--text); }
+
+.section-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 20px 0 10px;
+}
+</style>
+</head>
+<body>
+
+<!-- Loading Screen -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-robot">🤖</div>
+  <div class="loading-text">RIAB 初始化中...</div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- App Shell -->
+<div class="app-shell">
+
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div class="brand-icon">🤖</div>
+      <div>
+        <div class="brand-title">RIAB</div>
+        <div class="brand-subtitle">理性投資守衛</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="cnn-badge neutral" id="cnnBadge">CNN --</div>
+      <button class="sync-btn" id="syncBtn" onclick="forceSync()">
+        <span class="sync-icon">⟳</span>
+        <span id="syncTime">同步</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Tab Nav -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('monitor')">🔥 監控</button>
+    <button class="tab-btn" onclick="switchTab('history')">📋 歷史</button>
+    <button class="tab-btn" onclick="switchTab('stats')">📊 統計</button>
+    <button class="tab-btn" onclick="switchTab('config')">⚙️ 設定</button>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- 監控 Panel -->
+    <div class="tab-panel active" id="panel-monitor">
+      <!-- 🔥 過熱收割區 -->
+      <div class="zone-header hot">
+        <span>🔥</span>
+        <div class="zone-title">過熱收割區</div>
+        <div class="zone-count" id="hotCount" style="color:var(--red)">0</div>
+      </div>
+      <div id="hotZone"></div>
+
+      <!-- ⚠️ 觀察區 -->
+      <div class="zone-header wait" style="margin-top:20px">
+        <span>⚠️</span>
+        <div class="zone-title">觀察等待區</div>
+        <div class="zone-count" id="warnCount" style="color:var(--amber)">0</div>
+      </div>
+      <div id="warnZone"></div>
+
+      <!-- 💎 理性持有區 -->
+      <div class="zone-header ok" style="margin-top:20px">
+        <span>💎</span>
+        <div class="zone-title">理性持有區</div>
+        <div class="zone-count" id="goodCount" style="color:var(--green)">0</div>
+      </div>
+      <div id="goodZone"></div>
+    </div>
+
+    <!-- 歷史 Panel -->
+    <div class="tab-panel" id="panel-history">
+      <div id="historyList"></div>
+    </div>
+
+    <!-- 統計 Panel -->
+    <div class="tab-panel" id="panel-stats">
+      <div class="stat-grid" id="statsGrid"></div>
+      <div id="statsDetails"></div>
+    </div>
+
+    <!-- 設定 Panel -->
+    <div class="tab-panel" id="panel-config">
+      <div class="section-title">連線設定</div>
+      <div class="config-item">
+        <div class="config-key">GAS Web App URL</div>
+      </div>
+      <div class="form-group">
+        <input type="url" class="form-input" id="gasUrlInput"
+          placeholder="https://script.google.com/macros/s/..." 
+          value="" oninput="saveGasUrl(this.value)">
+      </div>
+      <div class="form-group">
+        <label class="form-label">安全金鑰</label>
+        <input type="text" class="form-input" id="gasKeyInput"
+          placeholder="riab_secret_2026"
+          value="" oninput="saveGasKey(this.value)">
+      </div>
+      <button class="add-stock-btn" style="margin-bottom:12px" onclick="testConnection()">
+        🔌 測試連線
+      </button>
+
+      <div class="section-title">系統資訊</div>
+      <div id="systemInfo"></div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="bottom-bar">
+    <button class="add-stock-btn" onclick="openAddModal()">
+      ＋ 新增監控股票
+    </button>
+  </div>
+</div>
+
+<!-- ═══ Add Stock Modal ═══ -->
+<div class="modal-overlay" id="addModal" onclick="closeModal('addModal')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">＋ 新增監控股票</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">股票代號 *</label>
+        <input type="text" class="form-input" id="f_code" placeholder="2330" inputmode="numeric" maxlength="6">
+      </div>
+      <div class="form-group">
+        <label class="form-label">股票名稱 *</label>
+        <input type="text" class="form-input" id="f_name" placeholder="台積電">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">買入單價 *</label>
+        <input type="text" class="form-input numpad-input" id="f_buyPrice"
+          placeholder="0" readonly onclick="openNumpad('f_buyPrice','買入單價')">
+      </div>
+      <div class="form-group">
+        <label class="form-label">持有股數 *</label>
+        <input type="text" class="form-input numpad-input" id="f_shares"
+          placeholder="0" readonly onclick="openNumpad('f_shares','持有股數')">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">買入日期</label>
+      <input type="date" class="form-input" id="f_buyDate">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">產業類別</label>
+      <select class="select-input" id="f_sector">
+        <option value="半導體">半導體</option>
+        <option value="科技">科技</option>
+        <option value="電子">電子</option>
+        <option value="金融">金融</option>
+        <option value="傳產">傳產</option>
+        <option value="生技">生技</option>
+        <option value="其他" selected>其他</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">手續費率</label>
+        <input type="text" class="form-input numpad-input" id="f_feeRate"
+          placeholder="0.001425" readonly onclick="openNumpad('f_feeRate','手續費率',true)">
+      </div>
+      <div class="form-group">
+        <label class="form-label">證交稅率</label>
+        <input type="text" class="form-input numpad-input" id="f_taxRate"
+          placeholder="0.003" readonly onclick="openNumpad('f_taxRate','證交稅率',true)">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">備註</label>
+      <input type="text" class="form-input" id="f_note" placeholder="選填">
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('addModal')">取消</button>
+      <button class="btn-confirm" onclick="submitAddStock()">✓ 確認加入</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Settle Confirm Modal ═══ -->
+<div class="modal-overlay" id="settleModal" onclick="closeModal('settleModal')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="settleTitle">📤 確認結算</div>
+    <div class="settle-detail" id="settleDetail"></div>
+
+    <div class="form-group">
+      <label class="form-label">賣出單價（留空使用現價）</label>
+      <input type="text" class="form-input numpad-input" id="f_sellPrice"
+        placeholder="使用現價" readonly onclick="openNumpad('f_sellPrice','賣出單價')">
+    </div>
+    <div class="form-group">
+      <label class="form-label">結算理由</label>
+      <input type="text" class="form-input" id="f_sellReason" placeholder="如：達成獲利目標">
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('settleModal')">取消</button>
+      <button class="btn-danger" onclick="confirmSettle()">💰 確認結算</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Custom Numpad ═══ -->
+<div class="numpad-overlay" id="numpadOverlay" onclick="closeNumpad()">
+  <div class="numpad-container" onclick="event.stopPropagation()">
+    <div class="numpad-display">
+      <div class="numpad-label" id="numpadLabel">輸入數值</div>
+      <div class="numpad-value" id="numpadValue">0</div>
+    </div>
+    <div class="numpad-grid">
+      <div class="numpad-key" onclick="numpadInput('7')">7</div>
+      <div class="numpad-key" onclick="numpadInput('8')">8</div>
+      <div class="numpad-key" onclick="numpadInput('9')">9</div>
+      <div class="numpad-key" onclick="numpadInput('4')">4</div>
+      <div class="numpad-key" onclick="numpadInput('5')">5</div>
+      <div class="numpad-key" onclick="numpadInput('6')">6</div>
+      <div class="numpad-key" onclick="numpadInput('1')">1</div>
+      <div class="numpad-key" onclick="numpadInput('2')">2</div>
+      <div class="numpad-key" onclick="numpadInput('3')">3</div>
+      <div class="numpad-key key-dot" onclick="numpadInput('.')">.</div>
+      <div class="numpad-key key-0" onclick="numpadInput('0')">0</div>
+      <div class="numpad-key key-del" onclick="numpadDel()">⌫</div>
+      <div class="numpad-key key-done" onclick="numpadDone()">確認輸入</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     JavaScript
+════════════════════════════════════════════ -->
+<script>
+// ── Config ───────────────────────────────────
+const CONFIG = {
+  gasUrl: localStorage.getItem('riab_gas_url') || '',
+  gasKey: localStorage.getItem('riab_gas_key') || 'riab_secret_2026',
+};
+
+let stocks = [];
+let historyData = [];
+let currentSettleStock = null;
+let numpadTarget = null;
+let numpadIsDecimal = false;
+
+// ── Init ─────────────────────────────────────
+document.addEventListener('DOMContentLoaded', async () => {
+  // Set default date
+  document.getElementById('f_buyDate').value = todayStr();
+  document.getElementById('f_feeRate').value = '0.001425';
+  document.getElementById('f_taxRate').value = '0.003';
+
+  // Load config inputs
+  document.getElementById('gasUrlInput').value = CONFIG.gasUrl;
+  document.getElementById('gasKeyInput').value = CONFIG.gasKey;
+
+  await loadAllData();
+});
+
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+// ── API ──────────────────────────────────────
+async function apiGet(action) {
+  if (!CONFIG.gasUrl) throw new Error('請先在設定頁填入 GAS URL');
+  const url = `${CONFIG.gasUrl}?key=${CONFIG.gasKey}&action=${action}&t=${Date.now()}`;
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
+}
+
+async function apiPost(body) {
+  if (!CONFIG.gasUrl) throw new Error('請先在設定頁填入 GAS URL');
+  const url = `${CONFIG.gasUrl}?key=${CONFIG.gasKey}`;
+  const r = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  return r.json();
+}
+
+async function loadAllData() {
+  const overlay = document.getElementById('loadingOverlay');
+  try {
+    if (CONFIG.gasUrl) {
+      const [main, hist] = await Promise.all([
+        apiGet('getAll'),
+        apiGet('getHistory')
+      ]);
+      stocks = main.stocks || [];
+      historyData = hist.history || [];
+      updateCNNBadge(main.cnnIndex);
+      updateSyncTime(main.lastUpdate);
+    } else {
+      stocks = getSampleData();
+      historyData = [];
+    }
+    renderMonitor();
+    renderHistory();
+    renderStats();
+  } catch(e) {
+    showToast('載入失敗：' + e.message, 'error');
+    stocks = getSampleData();
+    renderMonitor();
+  } finally {
+    overlay.classList.add('hidden');
+  }
+}
+
+// ── Render ───────────────────────────────────
+function renderMonitor() {
+  const hot  = stocks.filter(s => s.score < 40);
+  const warn = stocks.filter(s => s.score >= 40 && s.score < 60);
+  const good = stocks.filter(s => s.score >= 60);
+
+  document.getElementById('hotCount').textContent  = hot.length;
+  document.getElementById('warnCount').textContent = warn.length;
+  document.getElementById('goodCount').textContent = good.length;
+
+  document.getElementById('hotZone').innerHTML  = hot.length  ? hot.map(cardHTML).join('')  : emptyZone('暫無過熱標的');
+  document.getElementById('warnZone').innerHTML = warn.length ? warn.map(cardHTML).join('') : emptyZone('暫無觀察標的');
+  document.getElementById('goodZone').innerHTML = good.length ? good.map(cardHTML).join('') : emptyZone('監控清單為空，點擊下方按鈕新增');
+}
+
+function cardHTML(s) {
+  const pct = s.profitPct || 0;
+  const cls = s.score < 40 ? 'hot' : s.score < 60 ? 'warn' : 'good';
+  const pctCls = pct >= 0 ? 'pos' : 'neg';
+  const pctStr = (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%';
+  const cost = s.buyCost ? s.buyCost.toLocaleString('zh-TW', {maximumFractionDigits: 0}) : '-';
+  const profit = s.netProfit ? (s.netProfit >= 0 ? '+' : '') + s.netProfit.toLocaleString('zh-TW', {maximumFractionDigits: 0}) : '-';
+
+  return `
+  <div class="stock-card ${cls}" onclick="openSettleModal(${JSON.stringify(s).replace(/"/g,'&quot;')})">
+    <div class="card-top">
+      <div class="score-ring ${cls}">
+        <div class="score-num">${s.score}</div>
+        <div class="score-label">分</div>
+      </div>
+      <div class="card-info">
+        <div class="card-code">${s.code}</div>
+        <div class="card-name">${s.name}</div>
+        <div class="card-rating">${s.rating || ''}</div>
+      </div>
+      <div class="card-right">
+        <div class="profit-pct ${pctCls}">${pctStr}</div>
+        <div class="card-price">現價 ${s.currPrice}</div>
+        <div class="card-days">持有 ${s.holdDays} 天</div>
+      </div>
+    </div>
+    <div class="card-bottom">
+      <div class="mini-stat">
+        <div class="mini-label">成本</div>
+        <div class="mini-value" style="font-size:11px">$${cost}</div>
+      </div>
+      <div class="mini-stat">
+        <div class="mini-label">淨利</div>
+        <div class="mini-value" style="color:${pct>=0?'var(--green)':'var(--red)'};font-size:11px">${profit}</div>
+      </div>
+      <div class="mini-stat">
+        <div class="mini-label">產業</div>
+        <div class="mini-value" style="font-size:10px;color:var(--muted)">${s.sector || '-'}</div>
+      </div>
+      ${s.score < 55 ? `<button class="settle-btn" onclick="event.stopPropagation();openSettleModal(${JSON.stringify(s).replace(/"/g,'&quot;')})">💰 結算</button>` : ''}
+    </div>
+  </div>`;
+}
+
+function emptyZone(msg) {
+  return `<div style="text-align:center;padding:24px 0;color:var(--muted);font-size:13px">${msg}</div>`;
+}
+
+function renderHistory() {
+  const el = document.getElementById('historyList');
+  if (!historyData.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">尚無歷史紀錄</div><div class="empty-sub">完成首次結算後將顯示於此</div></div>`;
+    return;
+  }
+  el.innerHTML = historyData.slice().reverse().map(h => {
+    const pct = Number(h.profitPct) || 0;
+    const pctCls = pct >= 0 ? 'pos' : 'neg';
+    const pctStr = (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%';
+    return `
+    <div class="history-item">
+      <div class="history-left">
+        <div class="code">${h.code}</div>
+        <div class="name">${h.name}</div>
+        <div class="dates">${h.buyDate} → ${h.sellDate}</div>
+      </div>
+      <div class="history-right">
+        <div class="pct ${pctCls}">${pctStr}</div>
+        <div class="days">${h.holdDays} 天</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderStats() {
+  const el = document.getElementById('statsGrid');
+  const detail = document.getElementById('statsDetails');
+  if (!stocks.length && !historyData.length) {
+    el.innerHTML = '';
+    detail.innerHTML = `<div class="empty-state"><div class="empty-icon">📊</div><div class="empty-text">尚無統計資料</div></div>`;
+    return;
+  }
+
+  const totalNetProfit = stocks.reduce((a, s) => a + (s.netProfit || 0), 0);
+  const avgScore = stocks.length ? (stocks.reduce((a,s)=>a+s.score,0)/stocks.length).toFixed(0) : 0;
+  const histProfit = historyData.reduce((a,h) => a + (Number(h.netProfit)||0), 0);
+  const winRate = historyData.length
+    ? ((historyData.filter(h=>Number(h.profitPct)>0).length / historyData.length)*100).toFixed(0)
+    : 0;
+
+  el.innerHTML = `
+    <div class="stat-card">
+      <div class="stat-card-label">持倉浮盈</div>
+      <div class="stat-card-value ${totalNetProfit>=0?'pos':'neg'}">${totalNetProfit>=0?'+':''}${(totalNetProfit/1000).toFixed(1)}K</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">平均評分</div>
+      <div class="stat-card-value neutral">${avgScore}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">歷史總盈虧</div>
+      <div class="stat-card-value ${histProfit>=0?'pos':'neg'}">${histProfit>=0?'+':''}${(histProfit/1000).toFixed(1)}K</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">勝率</div>
+      <div class="stat-card-value neutral">${winRate}%</div>
+    </div>`;
+
+  detail.innerHTML = `
+    <div class="section-title">持倉概況</div>
+    ${stocks.map(s=>`
+    <div class="config-item">
+      <div class="config-key">${s.code} ${s.name}</div>
+      <div class="config-value" style="color:${s.profitPct>=0?'var(--green)':'var(--red)'}">
+        ${s.profitPct>=0?'+':''}${(s.profitPct||0).toFixed(1)}%
+      </div>
+    </div>`).join('')}`;
+}
+
+function renderSystemInfo(cfg) {
+  const el = document.getElementById('systemInfo');
+  el.innerHTML = `
+    <div class="config-item"><div class="config-key">CNN 貪婪恐懼指數</div><div class="config-value">${cfg.cnnIndex || '--'}</div></div>
+    <div class="config-item"><div class="config-key">費半單日漲跌%</div><div class="config-value">${cfg.soxDropPct ? Number(cfg.soxDropPct).toFixed(2)+'%' : '--'}</div></div>
+    <div class="config-item"><div class="config-key">最後同步時間</div><div class="config-value" style="font-size:11px">${cfg.lastUpdate || '--'}</div></div>`;
+}
+
+// ── CNN Badge ─────────────────────────────────
+function updateCNNBadge(val) {
+  const el = document.getElementById('cnnBadge');
+  el.textContent = `CNN ${val || '--'}`;
+  el.className = 'cnn-badge';
+  if (val >= 75) el.classList.add('greed');
+  else if (val <= 25) el.classList.add('fear');
+  else el.classList.add('neutral');
+}
+
+function updateSyncTime(t) {
+  if (t) document.getElementById('syncTime').textContent = t.slice(11,16) || '同步';
+}
+
+// ── Tab Switching ────────────────────────────
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    const tabs = ['monitor','history','stats','config'];
+    b.classList.toggle('active', tabs[i] === tab);
+  });
+  document.querySelectorAll('.tab-panel').forEach(p => {
+    p.classList.toggle('active', p.id === `panel-${tab}`);
+  });
+
+  const addBar = document.querySelector('.bottom-bar');
+  addBar.style.display = tab === 'monitor' ? 'block' : 'none';
+
+  if (tab === 'config') loadConfigInfo();
+}
+
+async function loadConfigInfo() {
+  if (!CONFIG.gasUrl) return;
+  try {
+    const cfg = await apiGet('getConfig');
+    renderSystemInfo(cfg);
+  } catch(e) {}
+}
+
+// ── Sync ─────────────────────────────────────
+async function forceSync() {
+  const btn = document.getElementById('syncBtn');
+  btn.classList.add('syncing');
+  showToast('正在同步...', 'info');
+  try {
+    if (CONFIG.gasUrl) {
+      await apiPost({ action: 'forceRefresh' });
+    }
+    await loadAllData();
+    showToast('✅ 同步完成', 'success');
+  } catch(e) {
+    showToast('同步失敗：' + e.message, 'error');
+  } finally {
+    btn.classList.remove('syncing');
+  }
+}
+
+// ── Add Stock ────────────────────────────────
+function openAddModal() {
+  document.getElementById('f_code').value = '';
+  document.getElementById('f_name').value = '';
+  document.getElementById('f_buyPrice').value = '';
+  document.getElementById('f_shares').value = '';
+  document.getElementById('f_buyDate').value = todayStr();
+  document.getElementById('f_note').value = '';
+  document.getElementById('f_feeRate').value = '0.001425';
+  document.getElementById('f_taxRate').value = '0.003';
+  openModal('addModal');
+}
+
+async function submitAddStock() {
+  const code     = document.getElementById('f_code').value.trim();
+  const name     = document.getElementById('f_name').value.trim();
+  const buyPrice = parseFloat(document.getElementById('f_buyPrice').value);
+  const shares   = parseInt(document.getElementById('f_shares').value);
+  const buyDate  = document.getElementById('f_buyDate').value;
+  const sector   = document.getElementById('f_sector').value;
+  const feeRate  = parseFloat(document.getElementById('f_feeRate').value) || 0.001425;
+  const taxRate  = parseFloat(document.getElementById('f_taxRate').value) || 0.003;
+  const note     = document.getElementById('f_note').value;
+
+  if (!code || !name || !buyPrice || !shares) {
+    showToast('請填寫所有必填欄位', 'error');
+    return;
+  }
+
+  try {
+    if (CONFIG.gasUrl) {
+      await apiPost({ action: 'addStock', data: { code, name, buyPrice, shares, buyDate, sector, feeRate, taxRate, note, currPrice: buyPrice } });
+      showToast(`✅ ${code} ${name} 已加入監控`, 'success');
+      closeModal('addModal');
+      await loadAllData();
+    } else {
+      // Demo mode
+      const buyCost = buyPrice * shares * (1 + feeRate);
+      const days = buyDate ? Math.floor((new Date() - new Date(buyDate)) / 86400000) : 0;
+      const mockStock = {
+        rowIndex: stocks.length + 2, code, name, buyDate, buyPrice, shares, sector,
+        feeRate, taxRate, currPrice: buyPrice, buyCost,
+        sellValue: buyPrice * shares * (1 - feeRate - taxRate),
+        netProfit: 0, profitPct: 0, holdDays: days,
+        score: 65, rating: '⏳ 觀察等待', lastNotify: '', note
+      };
+      stocks.push(mockStock);
+      showToast(`✅ ${code} ${name} 已加入（示範模式）`, 'success');
+      closeModal('addModal');
+      renderMonitor();
+    }
+  } catch(e) {
+    showToast('新增失敗：' + e.message, 'error');
+  }
+}
+
+// ── Settle ───────────────────────────────────
+function openSettleModal(s) {
+  currentSettleStock = s;
+  document.getElementById('settleTitle').textContent = `📤 結算：${s.code} ${s.name}`;
+  document.getElementById('f_sellPrice').value = '';
+  document.getElementById('f_sellReason').value = '';
+
+  const pct = s.profitPct || 0;
+  const pctStr = (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%';
+  const profitColor = pct >= 0 ? 'var(--green)' : 'var(--red)';
+  const netStr = s.netProfit ? (s.netProfit >= 0 ? '+' : '') + s.netProfit.toLocaleString('zh-TW', {maximumFractionDigits: 0}) : '0';
+
+  document.getElementById('settleDetail').innerHTML = `
+    <div class="settle-row"><span class="settle-key">買入成本</span><span class="settle-val">$${(s.buyCost||0).toLocaleString('zh-TW',{maximumFractionDigits:0})}</span></div>
+    <div class="settle-row"><span class="settle-key">現價賣出價值</span><span class="settle-val">$${(s.sellValue||0).toLocaleString('zh-TW',{maximumFractionDigits:0})}</span></div>
+    <div class="settle-row"><span class="settle-key">淨利（扣稅費）</span><span class="settle-val" style="color:${profitColor}">${netStr}</span></div>
+    <div class="settle-row"><span class="settle-key">獲利率</span><span class="settle-val" style="color:${profitColor}">${pctStr}</span></div>
+    <div class="settle-row"><span class="settle-key">持有天數</span><span class="settle-val">${s.holdDays} 天</span></div>
+    <div class="settle-row"><span class="settle-key">評分</span><span class="settle-val">${s.score} 分 · ${s.rating}</span></div>`;
+
+  openModal('settleModal');
+  if (navigator.vibrate) navigator.vibrate(30);
+}
+
+async function confirmSettle() {
+  if (!currentSettleStock) return;
+  const s = currentSettleStock;
+  const sellPrice = parseFloat(document.getElementById('f_sellPrice').value) || s.currPrice;
+  const reason = document.getElementById('f_sellReason').value || '手動結算';
+
+  try {
+    if (CONFIG.gasUrl) {
+      await apiPost({ action: 'sellStock', data: { rowIndex: s.rowIndex, sellPrice, reason } });
+    } else {
+      const idx = stocks.findIndex(x => x.code === s.code && x.rowIndex === s.rowIndex);
+      if (idx !== -1) stocks.splice(idx, 1);
+      historyData.push({ ...s, sellDate: todayStr(), sellPrice, reason });
+    }
+    showToast(`💰 ${s.code} ${s.name} 結算完成`, 'success');
+    closeModal('settleModal');
+    if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
+    await loadAllData();
+  } catch(e) {
+    showToast('結算失敗：' + e.message, 'error');
+  }
+}
+
+// ── Modal helpers ────────────────────────────
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ── Numpad ───────────────────────────────────
+let _numpadCurrent = '0';
+
+function openNumpad(targetId, label, isDecimal = false) {
+  numpadTarget = targetId;
+  numpadIsDecimal = isDecimal;
+  _numpadCurrent = document.getElementById(targetId).value || '0';
+  document.getElementById('numpadLabel').textContent = label;
+  document.getElementById('numpadValue').textContent = _numpadCurrent;
+  document.getElementById('numpadOverlay').classList.add('open');
+}
+
+function closeNumpad() {
+  document.getElementById('numpadOverlay').classList.remove('open');
+  numpadTarget = null;
+}
+
+function numpadInput(char) {
+  if (navigator.vibrate) navigator.vibrate(8);
+  if (char === '.' && _numpadCurrent.includes('.')) return;
+  if (_numpadCurrent === '0' && char !== '.') _numpadCurrent = char;
+  else _numpadCurrent += char;
+  if (_numpadCurrent.length > 12) return;
+  document.getElementById('numpadValue').textContent = _numpadCurrent;
+}
+
+function numpadDel() {
+  if (navigator.vibrate) navigator.vibrate(8);
+  if (_numpadCurrent.length <= 1) { _numpadCurrent = '0'; }
+  else { _numpadCurrent = _numpadCurrent.slice(0, -1); }
+  document.getElementById('numpadValue').textContent = _numpadCurrent;
+}
+
+function numpadDone() {
+  if (numpadTarget) {
+    document.getElementById(numpadTarget).value = _numpadCurrent;
+  }
+  closeNumpad();
+  if (navigator.vibrate) navigator.vibrate(20);
+}
+
+// ── Config Save ──────────────────────────────
+function saveGasUrl(val) {
+  CONFIG.gasUrl = val.trim();
+  localStorage.setItem('riab_gas_url', val.trim());
+}
+function saveGasKey(val) {
+  CONFIG.gasKey = val.trim();
+  localStorage.setItem('riab_gas_key', val.trim());
+}
+
+async function testConnection() {
+  if (!CONFIG.gasUrl) { showToast('請先填入 GAS URL', 'error'); return; }
+  showToast('測試連線中...', 'info');
+  try {
+    const r = await apiGet('getConfig');
+    if (r.error) throw new Error(r.error);
+    showToast('✅ 連線成功！', 'success');
+    renderSystemInfo(r);
+  } catch(e) {
+    showToast('連線失敗：' + e.message, 'error');
+  }
+}
+
+// ── Toast ────────────────────────────────────
+let toastTimer;
+function showToast(msg, type = 'info') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `toast ${type} show`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ── Sample Data (Demo Mode) ──────────────────
+function getSampleData() {
+  return [
+    { rowIndex: 2, code: '2330', name: '台積電', buyDate: '2026/03/10', buyPrice: 850, shares: 1000,
+      sector: '半導體', feeRate: 0.001425, taxRate: 0.003, currPrice: 1005,
+      buyCost: 851211.25, sellValue: 999914.75, netProfit: 148703.5, profitPct: 17.47,
+      holdDays: 7, score: 33, rating: '🔥 強烈建議收割', lastNotify: '', note: '' },
+    { rowIndex: 3, code: '2454', name: '聯發科', buyDate: '2026/02/01', buyPrice: 1200, shares: 500,
+      sector: '半導體', feeRate: 0.001425, taxRate: 0.003, currPrice: 1280,
+      buyCost: 601711.25, sellValue: 635457.75, netProfit: 33746.5, profitPct: 5.61,
+      holdDays: 44, score: 58, rating: '⏳ 觀察等待', lastNotify: '', note: '' },
+    { rowIndex: 4, code: '2317', name: '鴻海', buyDate: '2025/10/01', buyPrice: 180, shares: 3000,
+      sector: '電子', feeRate: 0.001425, taxRate: 0.003, currPrice: 155,
+      buyCost: 540769.5, sellValue: 462841.5, netProfit: -77928, profitPct: -14.41,
+      holdDays: 167, score: 22, rating: '🔴 強烈建議止損', lastNotify: '', note: '' },
+    { rowIndex: 5, code: '2412', name: '中華電', buyDate: '2026/01/15', buyPrice: 115, shares: 2000,
+      sector: '電信', feeRate: 0.001425, taxRate: 0.003, currPrice: 123,
+      buyCost: 230327.5, sellValue: 244310.1, netProfit: 13982.6, profitPct: 6.07,
+      holdDays: 61, score: 72, rating: '💎 理性持有', lastNotify: '', note: '電信穩定股息' },
+  ];
+}
+</script>
+</body>
+</html>
