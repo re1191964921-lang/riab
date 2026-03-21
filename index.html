@@ -30,7 +30,6 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow-x:hidden;background:var(--bg);color:var(--text);font-family:var(--ui)}
-
 .app-shell{display:flex;flex-direction:column;min-height:100dvh;padding-top:var(--safe-top);padding-bottom:var(--safe-bot)}
 
 /* TopBar */
@@ -69,15 +68,15 @@ html,body{height:100%;overflow-x:hidden;background:var(--bg);color:var(--text);f
 .zone-hdr.ok   .zone-title{color:var(--green)}
 .zone-cnt{background:var(--bg3);border-radius:20px;padding:3px 10px;font-size:11px;font-family:var(--mono);font-weight:700}
 
-/* Mother Card */
-.stock-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;margin-bottom:12px;overflow:hidden;transition:transform .15s}
-.stock-card:active{transform:scale(.98)}
+/* Stock Card */
+.stock-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;margin-bottom:12px;overflow:hidden}
 .stock-card.hot{border-color:rgba(255,59,59,.5);animation:pulse-red 2s ease-in-out infinite}
 .stock-card.warn{border-color:rgba(255,170,0,.4)}
 .stock-card.good{border-color:rgba(0,255,136,.25)}
 @keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(255,59,59,0)}50%{box-shadow:0 0 0 6px rgba(255,59,59,.2)}}
 
 .card-top{display:flex;align-items:center;padding:14px 16px;gap:12px;cursor:pointer;min-height:80px}
+.card-top:active{background:rgba(255,255,255,.02)}
 .score-ring{width:52px;height:52px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;border:2.5px solid}
 .score-ring.hot{border-color:var(--red);background:rgba(255,59,59,.1)}
 .score-ring.warn{border-color:var(--amber);background:rgba(255,170,0,.1)}
@@ -104,19 +103,19 @@ html,body{height:100%;overflow-x:hidden;background:var(--bg);color:var(--text);f
 .settle-btn{background:var(--green);color:#000;border:none;border-radius:10px;padding:10px 16px;font-size:12px;font-weight:700;font-family:var(--ui);cursor:pointer;min-height:44px;transition:all .15s;white-space:nowrap}
 .settle-btn:active{transform:scale(.95);background:#00cc6e}
 
-/* Batch container */
+/* Batch */
 .batch-wrap{border-top:1px solid var(--border)}
 .batch-item{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.015)}
 .batch-item:last-child{border-bottom:none}
-.batch-l .b-meta{font-size:11px;color:var(--muted)}
-.batch-l .b-price{font-size:14px;font-family:var(--mono);font-weight:700;margin-top:3px}
-.batch-l .b-cost{font-size:11px;color:var(--muted);margin-top:2px}
-.batch-r .b-pct{font-family:var(--mono);font-size:18px;font-weight:700;text-align:right}
-.batch-r .b-pct.pos{color:var(--green)}
-.batch-r .b-pct.neg{color:var(--red)}
+.b-meta{font-size:11px;color:var(--muted)}
+.b-price{font-size:14px;font-family:var(--mono);font-weight:700;margin-top:3px}
+.b-cost{font-size:11px;color:var(--muted);margin-top:2px}
+.b-pct{font-family:var(--mono);font-size:18px;font-weight:700;text-align:right}
+.b-pct.pos{color:var(--green)}
+.b-pct.neg{color:var(--red)}
 .batch-settle-btn{margin-top:6px;background:var(--red);color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:11px;font-family:var(--ui);cursor:pointer;min-height:32px;display:block;width:100%}
 .batch-settle-btn:active{background:#cc2222}
-.add-batch-btn{width:100%;background:transparent;color:var(--green);border:1px dashed var(--green);border-radius:10px;padding:11px;font-size:13px;font-weight:700;font-family:var(--ui);cursor:pointer;min-height:44px;margin:10px 16px;width:calc(100% - 32px)}
+.add-batch-btn{background:transparent;color:var(--green);border:1px dashed var(--green);border-radius:10px;padding:11px;font-size:13px;font-weight:700;font-family:var(--ui);cursor:pointer;min-height:44px;margin:10px 16px;width:calc(100% - 32px);display:block}
 .add-batch-btn:active{background:rgba(0,255,136,.08)}
 .expand-arrow{font-size:12px;color:var(--muted);transition:transform .2s;display:inline-block}
 
@@ -128,7 +127,7 @@ html,body{height:100%;overflow-x:hidden;background:var(--bg);color:var(--text);f
 /* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);z-index:200;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .25s}
 .modal-overlay.open{opacity:1;pointer-events:all}
-.modal-sheet{width:100%;background:var(--bg2);border-radius:24px 24px 0 0;border-top:1px solid var(--border);padding:20px 20px;padding-bottom:max(24px, var(--safe-bot));max-height:92dvh;overflow-y:auto;-webkit-overflow-scrolling:touch;transform:translateY(100%);transition:transform .3s cubic-bezier(.16,1,.3,1)}
+.modal-sheet{width:100%;background:var(--bg2);border-radius:24px 24px 0 0;border-top:1px solid var(--border);padding:20px;padding-bottom:max(24px, var(--safe-bot));max-height:92dvh;overflow-y:auto;-webkit-overflow-scrolling:touch;transform:translateY(100%);transition:transform .3s cubic-bezier(.16,1,.3,1)}
 .modal-overlay.open .modal-sheet{transform:translateY(0)}
 .modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px}
 .modal-title{font-size:18px;font-weight:900;margin-bottom:20px}
@@ -147,6 +146,12 @@ html,body{height:100%;overflow-x:hidden;background:var(--bg);color:var(--text);f
 .btn-danger{flex:2;background:var(--red);color:#fff;border:none;border-radius:12px;padding:16px;font-size:15px;font-weight:900;font-family:var(--ui);cursor:pointer;min-height:52px}
 .btn-danger:active{transform:scale(.98);background:#cc2222}
 
+/* 分批賣出比例按鈕 */
+.ratio-btns{display:flex;gap:8px;margin-top:-8px;margin-bottom:16px}
+.ratio-btn{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--amber);font-weight:700;font-size:13px;font-family:var(--ui);cursor:pointer;min-height:44px;transition:all .15s}
+.ratio-btn:active{background:var(--border);transform:scale(.96)}
+.ratio-btn.all{color:var(--red)}
+
 /* Numpad */
 .numpad-overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .2s}
 .numpad-overlay.open{opacity:1;pointer-events:all}
@@ -164,7 +169,7 @@ html,body{height:100%;overflow-x:hidden;background:var(--bg);color:var(--text);f
 .nk.kdone{background:var(--green);color:#000;font-size:14px;font-weight:900;font-family:var(--ui);grid-column:span 3;height:56px;margin-top:4px;border-color:transparent}
 .nk.kdone:active{background:#00cc6e}
 
-/* Settle modal */
+/* Settle Detail */
 .settle-detail{background:var(--bg3);border-radius:12px;padding:16px;margin:16px 0}
 .settle-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)}
 .settle-row:last-child{border-bottom:none}
@@ -182,11 +187,11 @@ html,body{height:100%;overflow-x:hidden;background:var(--bg);color:var(--text);f
 .stat-val.neg{color:var(--red)}
 .stat-val.n{color:var(--text)}
 .hist-item{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;min-height:70px}
-.hist-l .hcode{font-family:var(--mono);font-size:12px;color:var(--muted)}
-.hist-l .hname{font-size:15px;font-weight:700;margin:2px 0}
-.hist-l .hdates{font-size:11px;color:var(--muted)}
-.hist-r .hpct{font-family:var(--mono);font-size:20px;font-weight:700;text-align:right}
-.hist-r .hdays{font-size:11px;color:var(--muted);text-align:right;margin-top:2px}
+.hcode{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.hname{font-size:15px;font-weight:700;margin:2px 0}
+.hdates{font-size:11px;color:var(--muted)}
+.hpct{font-family:var(--mono);font-size:20px;font-weight:700;text-align:right}
+.hdays{font-size:11px;color:var(--muted);text-align:right;margin-top:2px}
 .sec-title{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin:20px 0 10px}
 .cfg-item{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
 .cfg-key{font-size:13px;color:var(--muted)}
@@ -224,7 +229,6 @@ html,body{height:100%;overflow-x:hidden;background:var(--bg);color:var(--text);f
 <div class="toast" id="toast"></div>
 
 <div class="app-shell">
-
   <div class="topbar">
     <div class="brand">
       <div class="brand-icon">🤖</div>
@@ -250,20 +254,17 @@ html,body{height:100%;overflow-x:hidden;background:var(--bg);color:var(--text);f
   </div>
 
   <div class="content">
-
     <div class="tab-panel active" id="panel-monitor">
       <div class="zone-hdr hot">
         <span>🔥</span><div class="zone-title">過熱收割區</div>
         <div class="zone-cnt" id="hotCount" style="color:var(--red)">0</div>
       </div>
       <div id="hotZone"></div>
-
       <div class="zone-hdr wait" style="margin-top:20px">
         <span>⚠️</span><div class="zone-title">觀察等待區</div>
         <div class="zone-cnt" id="warnCount" style="color:var(--amber)">0</div>
       </div>
       <div id="warnZone"></div>
-
       <div class="zone-hdr ok" style="margin-top:20px">
         <span>💎</span><div class="zone-title">理性持有區</div>
         <div class="zone-cnt" id="goodCount" style="color:var(--green)">0</div>
@@ -290,11 +291,11 @@ html,body{height:100%;overflow-x:hidden;background:var(--bg);color:var(--text);f
         <label class="form-label">安全金鑰</label>
         <input type="text" class="form-input" id="gasKeyInput" placeholder="riab_secret_2026" oninput="saveGasKey(this.value)">
       </div>
-      <button class="add-btn" style="margin-bottom:20px" onclick="testConnection()">🔌 測試連線</button>
+      <button class="add-btn" style="margin-bottom:12px" onclick="testConnection()">🔌 測試連線</button>
+      <button class="add-btn" style="margin-bottom:20px;background:var(--amber);color:#000" onclick="triggerFullRefresh()">🔄 強制完整更新（約30秒）</button>
       <div class="sec-title">系統資訊</div>
       <div id="systemInfo"></div>
     </div>
-
   </div>
 
   <div class="bottom-bar" id="bottomBar">
@@ -302,7 +303,7 @@ html,body{height:100%;overflow-x:hidden;background:var(--bg);color:var(--text);f
   </div>
 </div>
 
-<!-- Add Stock Modal -->
+<!-- Add Modal -->
 <div class="modal-overlay" id="addModal" onclick="closeModal('addModal')">
   <div class="modal-sheet" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
@@ -370,6 +371,17 @@ html,body{height:100%;overflow-x:hidden;background:var(--bg);color:var(--text);f
     <div class="modal-handle"></div>
     <div class="modal-title" id="settleTitle">📤 確認結算</div>
     <div class="settle-detail" id="settleDetail"></div>
+
+    <div class="form-group">
+      <label class="form-label">賣出股數（留空為全部）</label>
+      <input type="text" class="form-input np" id="f_sellShares" placeholder="留空=全部賣出" readonly onclick="openNumpad('f_sellShares','賣出股數')">
+    </div>
+    <div class="ratio-btns">
+      <button class="ratio-btn" onclick="setSellRatio(1/3)">賣 1/3</button>
+      <button class="ratio-btn" onclick="setSellRatio(1/2)">賣 1/2</button>
+      <button class="ratio-btn all" onclick="setSellRatio(1)">全部賣</button>
+    </div>
+
     <div class="form-group">
       <label class="form-label">賣出單價（留空使用現價）</label>
       <input type="text" class="form-input np" id="f_sellPrice" placeholder="使用現價" readonly onclick="openNumpad('f_sellPrice','賣出單價')">
@@ -410,7 +422,6 @@ const CFG = {
   gasUrl: localStorage.getItem('riab_gas_url') || '',
   gasKey: localStorage.getItem('riab_gas_key') || 'riab_secret_2026'
 };
-
 let stocks = [], historyData = [], settleTarget = null;
 let npTarget = null, npVal = '0';
 
@@ -435,7 +446,6 @@ async function apiGet(action) {
   const r = await fetch(`${CFG.gasUrl}?key=${CFG.gasKey}&action=${action}&t=${Date.now()}`);
   return r.json();
 }
-
 async function apiPost(body) {
   if (!CFG.gasUrl) throw new Error('請先在設定頁填入 GAS URL');
   const r = await fetch(`${CFG.gasUrl}?key=${CFG.gasKey}`, {
@@ -454,7 +464,7 @@ async function loadAll() {
       stocks = main.stocks || [];
       historyData = hist.history || [];
       updateCNNBadge(main.cnnIndex);
-      if (main.lastUpdate) document.getElementById('syncTime').textContent = (main.lastUpdate || '').slice(11,16) || '同步';
+      if (main.lastUpdate) document.getElementById('syncTime').textContent = (main.lastUpdate||'').slice(11,16)||'同步';
     } else {
       stocks = demoData();
       historyData = [];
@@ -463,7 +473,7 @@ async function loadAll() {
     renderHistory();
     renderStats();
   } catch(e) {
-    showToast('載入失敗：' + e.message, 'error');
+    showToast('載入失敗：'+e.message,'error');
     stocks = demoData();
     renderMonitor();
   } finally {
@@ -478,57 +488,47 @@ function groupByCode(arr) {
     if (!g[s.code]) g[s.code] = [];
     g[s.code].push(s);
   });
-  // Sort batches by batchNo
-  Object.values(g).forEach(batches => batches.sort((a,b) => a.batchNo - b.batchNo));
+  Object.values(g).forEach(b => b.sort((a,b) => a.batchNo - b.batchNo));
   return g;
 }
 
 function groupSummary(batches) {
-  const totalCost    = batches.reduce((s,b) => s + (b.buyCost||0), 0);
-  const totalSell    = batches.reduce((s,b) => s + (b.sellValue||0), 0);
-  const totalNet     = totalSell - totalCost;
-  const totalPct     = totalCost > 0 ? (totalNet / totalCost) * 100 : 0;
-  const totalShares  = batches.reduce((s,b) => s + (b.shares||0), 0);
-  const currPrice    = batches[0].currPrice;
+  const totalCost   = batches.reduce((s,b) => s+(b.buyCost||0), 0);
+  const totalSell   = batches.reduce((s,b) => s+(b.sellValue||0), 0);
+  const totalNet    = totalSell - totalCost;
+  const totalPct    = totalCost > 0 ? (totalNet/totalCost)*100 : 0;
+  const totalShares = batches.reduce((s,b) => s+(b.shares||0), 0);
   return {
     totalCost, totalNet, totalPct: parseFloat(totalPct.toFixed(2)),
-    totalShares, currPrice,
-    score:  batches[0].score,
-    rating: batches[0].rating,
-    name:   batches[0].name,
-    sector: batches[0].sector,
-    code:   batches[0].code
+    totalShares, currPrice: batches[0].currPrice,
+    score: batches[0].score, rating: batches[0].rating,
+    name: batches[0].name, sector: batches[0].sector, code: batches[0].code
   };
 }
 
 // ── Render Monitor ───────────────────────────────────────
 function renderMonitor() {
-  const groups = groupByCode(stocks);
-  const grouped = Object.entries(groups).map(([code, batches]) => ({
-    code, batches, summary: groupSummary(batches)
-  }));
-
-  const hot  = grouped.filter(g => g.summary.score < 40);
-  const warn = grouped.filter(g => g.summary.score >= 40 && g.summary.score < 60);
-  const good = grouped.filter(g => g.summary.score >= 60);
+  const groups  = groupByCode(stocks);
+  const grouped = Object.entries(groups).map(([code,batches]) => ({ code, batches, s: groupSummary(batches) }));
+  const hot  = grouped.filter(g => g.s.score < 40);
+  const warn = grouped.filter(g => g.s.score >= 40 && g.s.score < 60);
+  const good = grouped.filter(g => g.s.score >= 60);
 
   document.getElementById('hotCount').textContent  = hot.length;
   document.getElementById('warnCount').textContent = warn.length;
   document.getElementById('goodCount').textContent = good.length;
-
-  document.getElementById('hotZone').innerHTML  = hot.length  ? hot.map(g=>motherCardHTML(g)).join('')  : emptyZone('暫無過熱標的');
-  document.getElementById('warnZone').innerHTML = warn.length ? warn.map(g=>motherCardHTML(g)).join('') : emptyZone('暫無觀察標的');
-  document.getElementById('goodZone').innerHTML = good.length ? good.map(g=>motherCardHTML(g)).join('') : emptyZone('監控清單為空，點擊下方按鈕新增');
+  document.getElementById('hotZone').innerHTML  = hot.length  ? hot.map(motherCard).join('')  : emptyZone('暫無過熱標的');
+  document.getElementById('warnZone').innerHTML = warn.length ? warn.map(motherCard).join('') : emptyZone('暫無觀察標的');
+  document.getElementById('goodZone').innerHTML = good.length ? good.map(motherCard).join('') : emptyZone('監控清單為空，點下方按鈕新增');
 }
 
-function motherCardHTML({ code, batches, summary: s }) {
+function motherCard({ code, batches, s }) {
   const cls    = s.score < 40 ? 'hot' : s.score < 60 ? 'warn' : 'good';
   const pctCls = s.totalPct >= 0 ? 'pos' : 'neg';
   const pctStr = (s.totalPct >= 0 ? '+' : '') + s.totalPct.toFixed(1) + '%';
-  const bLabel = batches.length > 1 ? `${batches.length}批次` : '';
-
-  const settleBtn = s.score < 60
-    ? `<button class="settle-btn" onclick="event.stopPropagation();openSettleModal(${encodeStock(batches[0])})">💰 結算</button>`
+  const badge  = batches.length > 1 ? ` <span style="font-size:10px;color:var(--muted);font-family:var(--ui)">${batches.length}批次</span>` : '';
+  const btn    = s.score < 60
+    ? `<button class="settle-btn" onclick="event.stopPropagation();openSettleModal('${encodeS(batches[0])}')">💰 結算</button>`
     : '';
 
   return `
@@ -539,60 +539,44 @@ function motherCardHTML({ code, batches, summary: s }) {
       <div class="score-lbl">分</div>
     </div>
     <div class="card-info">
-      <div class="card-code">${code} <span style="font-size:10px;color:var(--muted);font-family:var(--ui)">${bLabel}</span></div>
+      <div class="card-code">${code}${badge}</div>
       <div class="card-name">${s.name}</div>
       <div class="card-rating">${s.rating}</div>
     </div>
     <div class="card-right">
       <div class="profit-pct ${pctCls}">${pctStr}</div>
       <div class="card-meta">現價 ${s.currPrice}</div>
-      <div class="card-meta" style="margin-top:4px">
-        <span class="expand-arrow" id="arrow-${code}">▼</span>
-      </div>
+      <div class="card-meta"><span class="expand-arrow" id="arrow-${code}">▼</span></div>
     </div>
   </div>
   <div class="card-bottom">
-    <div class="mini-stat">
-      <div class="mini-lbl">總成本</div>
-      <div class="mini-val" style="font-size:11px">$${(s.totalCost/1000).toFixed(0)}K</div>
-    </div>
-    <div class="mini-stat">
-      <div class="mini-lbl">總淨利</div>
-      <div class="mini-val" style="color:${s.totalPct>=0?'var(--green)':'var(--red)'};font-size:11px">
-        ${s.totalNet>=0?'+':''}$${(s.totalNet/1000).toFixed(1)}K
-      </div>
-    </div>
-    <div class="mini-stat">
-      <div class="mini-lbl">總持股</div>
-      <div class="mini-val" style="font-size:11px">${s.totalShares.toLocaleString()}</div>
-    </div>
-    ${settleBtn}
+    <div class="mini-stat"><div class="mini-lbl">總成本</div><div class="mini-val" style="font-size:11px">$${(s.totalCost/1000).toFixed(0)}K</div></div>
+    <div class="mini-stat"><div class="mini-lbl">總淨利</div><div class="mini-val" style="color:${s.totalPct>=0?'var(--green)':'var(--red)'};font-size:11px">${s.totalNet>=0?'+':''}$${(s.totalNet/1000).toFixed(1)}K</div></div>
+    <div class="mini-stat"><div class="mini-lbl">總持股</div><div class="mini-val" style="font-size:11px">${s.totalShares.toLocaleString()}</div></div>
+    ${btn}
   </div>
-  <!-- Batch details -->
   <div class="batch-wrap" id="batches-${code}" style="display:none">
-    ${batches.map(b => batchItemHTML(b)).join('')}
-    <button class="add-batch-btn" onclick="openAddBatchModal('${code}','${s.name}','${s.sector}')">
-      ＋ 新增批次買進
-    </button>
+    ${batches.map(batchItem).join('')}
+    <button class="add-batch-btn" onclick="openAddBatchModal('${code}','${s.name}','${s.sector}')">＋ 新增批次買進</button>
   </div>
 </div>`;
 }
 
-function batchItemHTML(b) {
-  const pct    = b.profitPct || 0;
-  const pctCls = pct >= 0 ? 'pos' : 'neg';
-  const pctStr = (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%';
-  const netStr = (b.netProfit >= 0 ? '+' : '') + '$' + Math.abs(b.netProfit||0).toLocaleString('zh-TW',{maximumFractionDigits:0});
+function batchItem(b) {
+  const pct    = b.profitPct||0;
+  const pc     = pct>=0?'pos':'neg';
+  const pctStr = (pct>=0?'+':'')+pct.toFixed(1)+'%';
+  const net    = (b.netProfit>=0?'+':'')+'$'+Math.abs(b.netProfit||0).toLocaleString('zh-TW',{maximumFractionDigits:0});
   return `
 <div class="batch-item">
-  <div class="batch-l">
+  <div>
     <div class="b-meta">批次 ${b.batchNo} · ${b.buyDate} · 持有${b.holdDays}天</div>
     <div class="b-price">$${b.buyPrice} × ${(b.shares||0).toLocaleString()}股</div>
-    <div class="b-cost">成本 $${((b.buyCost||0)/1000).toFixed(1)}K　淨利 ${netStr}</div>
+    <div class="b-cost">成本 $${((b.buyCost||0)/1000).toFixed(1)}K　淨利 ${net}</div>
   </div>
-  <div class="batch-r">
-    <div class="b-pct ${pctCls}">${pctStr}</div>
-    <button class="batch-settle-btn" onclick="openSettleModal(${encodeStock(b)})">結算此批</button>
+  <div>
+    <div class="b-pct ${pc}">${pctStr}</div>
+    <button class="batch-settle-btn" onclick="openSettleModal('${encodeS(b)}')">結算此批</button>
   </div>
 </div>`;
 }
@@ -605,17 +589,9 @@ function toggleBatches(code) {
   arrow.style.transform = open ? '' : 'rotate(180deg)';
 }
 
-function encodeStock(s) {
-  return `'${encodeURIComponent(JSON.stringify(s))}'`;
-}
-
-function decodeStock(str) {
-  return JSON.parse(decodeURIComponent(str));
-}
-
-function emptyZone(msg) {
-  return `<div style="text-align:center;padding:24px 0;color:var(--muted);font-size:13px">${msg}</div>`;
-}
+function encodeS(s)  { return encodeURIComponent(JSON.stringify(s)); }
+function decodeS(str){ return JSON.parse(decodeURIComponent(str)); }
+function emptyZone(msg) { return `<div style="text-align:center;padding:24px 0;color:var(--muted);font-size:13px">${msg}</div>`; }
 
 // ── Render History ────────────────────────────────────────
 function renderHistory() {
@@ -626,17 +602,10 @@ function renderHistory() {
   }
   el.innerHTML = historyData.slice().reverse().map(h => {
     const pct = Number(h.profitPct)||0;
-    const pc  = pct >= 0 ? 'pos' : 'neg';
+    const pc  = pct>=0?'pos':'neg';
     return `<div class="hist-item">
-      <div class="hist-l">
-        <div class="hcode">${h.code}</div>
-        <div class="hname">${h.name}</div>
-        <div class="hdates">${h.buyDate} → ${h.sellDate}</div>
-      </div>
-      <div class="hist-r">
-        <div class="hpct ${pc}">${pct>=0?'+':''}${pct.toFixed(1)}%</div>
-        <div class="hdays">${h.holdDays}天</div>
-      </div>
+      <div><div class="hcode">${h.code}</div><div class="hname">${h.name}</div><div class="hdates">${h.buyDate} → ${h.sellDate}</div></div>
+      <div><div class="hpct ${pc}">${pct>=0?'+':''}${pct.toFixed(1)}%</div><div class="hdays">${h.holdDays}天</div></div>
     </div>`;
   }).join('');
 }
@@ -645,18 +614,15 @@ function renderHistory() {
 function renderStats() {
   const el = document.getElementById('statsGrid');
   const dt = document.getElementById('statsDetails');
-
   if (!stocks.length && !historyData.length) {
-    el.innerHTML = '';
-    dt.innerHTML = `<div class="empty-state"><div class="empty-icon">📊</div><div class="empty-txt">尚無統計資料</div></div>`;
+    el.innerHTML='';
+    dt.innerHTML=`<div class="empty-state"><div class="empty-icon">📊</div><div class="empty-txt">尚無統計資料</div></div>`;
     return;
   }
-
-  const groups = groupByCode(stocks);
-  const summaries = Object.values(groups).map(b => groupSummary(b));
-  const totalFloat = summaries.reduce((s,g) => s+g.totalNet, 0);
-  const avgScore   = summaries.length ? (summaries.reduce((s,g) => s+g.score,0)/summaries.length).toFixed(0) : 0;
-  const histProfit = historyData.reduce((s,h) => s+(Number(h.netProfit)||0), 0);
+  const summaries  = Object.values(groupByCode(stocks)).map(b => groupSummary(b));
+  const totalFloat = summaries.reduce((s,g)=>s+g.totalNet,0);
+  const avgScore   = summaries.length ? (summaries.reduce((s,g)=>s+g.score,0)/summaries.length).toFixed(0) : 0;
+  const histProfit = historyData.reduce((s,h)=>s+(Number(h.netProfit)||0),0);
   const winRate    = historyData.length ? ((historyData.filter(h=>Number(h.profitPct)>0).length/historyData.length)*100).toFixed(0) : 0;
 
   el.innerHTML = `
@@ -666,37 +632,33 @@ function renderStats() {
     <div class="stat-card"><div class="stat-lbl">勝率</div><div class="stat-val n">${winRate}%</div></div>`;
 
   dt.innerHTML = `<div class="sec-title">持倉概況</div>` +
-    summaries.map(g => `
-    <div class="cfg-item">
-      <div class="cfg-key">${g.code} ${g.name}</div>
-      <div class="cfg-val" style="color:${g.totalPct>=0?'var(--green)':'var(--red)'}">${g.totalPct>=0?'+':''}${g.totalPct.toFixed(1)}%</div>
-    </div>`).join('');
+    summaries.map(g=>`<div class="cfg-item"><div class="cfg-key">${g.code} ${g.name}</div><div class="cfg-val" style="color:${g.totalPct>=0?'var(--green)':'var(--red)'}">${g.totalPct>=0?'+':''}${g.totalPct.toFixed(1)}%</div></div>`).join('');
 }
 
 // ── CNN Badge ─────────────────────────────────────────────
 function updateCNNBadge(v) {
   const el = document.getElementById('cnnBadge');
   el.textContent = `CNN ${v||'--'}`;
-  el.className = 'cnn-badge ' + (v >= 75 ? 'greed' : v <= 25 ? 'fear' : 'neutral');
+  el.className = 'cnn-badge '+(v>=75?'greed':v<=25?'fear':'neutral');
 }
 
 // ── Tab ──────────────────────────────────────────────────
 function switchTab(tab) {
-  const tabs = ['monitor','history','stats','config'];
-  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', tabs[i]===tab));
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id===`panel-${tab}`));
-  document.getElementById('bottomBar').style.display = tab==='monitor' ? 'block' : 'none';
+  const tabs=['monitor','history','stats','config'];
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',tabs[i]===tab));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id===`panel-${tab}`));
+  document.getElementById('bottomBar').style.display = tab==='monitor'?'block':'none';
   if (tab==='config') loadConfigInfo();
 }
 
 async function loadConfigInfo() {
   if (!CFG.gasUrl) return;
   try {
-    const cfg = await apiGet('getConfig');
+    const r = await apiGet('getConfig');
     document.getElementById('systemInfo').innerHTML = `
-      <div class="cfg-item"><div class="cfg-key">CNN 貪婪恐懼指數</div><div class="cfg-val">${cfg.cnnIndex||'--'}</div></div>
-      <div class="cfg-item"><div class="cfg-key">費半單日漲跌%</div><div class="cfg-val">${cfg.soxDropPct?Number(cfg.soxDropPct).toFixed(2)+'%':'--'}</div></div>
-      <div class="cfg-item"><div class="cfg-key">最後同步時間</div><div class="cfg-val" style="font-size:11px">${cfg.lastUpdate||'--'}</div></div>`;
+      <div class="cfg-item"><div class="cfg-key">CNN 貪婪恐懼指數</div><div class="cfg-val">${r.cnnIndex||'--'}</div></div>
+      <div class="cfg-item"><div class="cfg-key">費半單日漲跌%</div><div class="cfg-val">${r.soxDropPct?Number(r.soxDropPct).toFixed(2)+'%':'--'}</div></div>
+      <div class="cfg-item"><div class="cfg-key">最後同步時間</div><div class="cfg-val" style="font-size:11px">${r.lastUpdate||'--'}</div></div>`;
   } catch(e) {}
 }
 
@@ -704,15 +666,32 @@ async function loadConfigInfo() {
 async function forceSync() {
   const btn = document.getElementById('syncBtn');
   btn.classList.add('syncing');
-  showToast('正在同步...','info');
+  showToast('載入最新資料...','info');
   try {
-    if (CFG.gasUrl) await apiPost({ action:'forceRefresh' });
     await loadAll();
     showToast('✅ 同步完成','success');
   } catch(e) {
     showToast('同步失敗：'+e.message,'error');
   } finally {
     btn.classList.remove('syncing');
+  }
+}
+
+async function triggerFullRefresh() {
+  showToast('完整更新觸發中...','info');
+  try {
+    fetch(`${CFG.gasUrl}?key=${CFG.gasKey}`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'forceRefresh'})
+    }).catch(()=>{});
+    showToast('⏳ GAS 運算中，35秒後自動載入...','info');
+    setTimeout(async()=>{
+      await loadAll();
+      showToast('✅ 完整更新完成','success');
+    }, 35000);
+  } catch(e) {
+    showToast('觸發失敗：'+e.message,'error');
   }
 }
 
@@ -742,46 +721,36 @@ function openAddBatchModal(code, name, sector) {
   document.getElementById('f_feeRate').value = '0.001425';
   document.getElementById('f_taxRate').value = '0.003';
   document.getElementById('f_code').readOnly = true;
-  // Set sector
   const sel = document.getElementById('f_sector');
-  for (let i = 0; i < sel.options.length; i++) {
-    if (sel.options[i].value === sector) { sel.selectedIndex = i; break; }
-  }
+  for (let i=0;i<sel.options.length;i++) { if(sel.options[i].value===sector){sel.selectedIndex=i;break;} }
   openModal('addModal');
 }
 
 async function lookupStockCode() {
   const code = document.getElementById('f_code').value.trim();
   if (code.length < 4) return;
-  const nameFld   = document.getElementById('f_name');
-  const sectorFld = document.getElementById('f_sector');
-  const priceFld  = document.getElementById('f_buyPrice');
-  nameFld.placeholder = '查詢中...';
+  const nf = document.getElementById('f_name');
+  const sf = document.getElementById('f_sector');
+  const pf = document.getElementById('f_buyPrice');
+  nf.placeholder = '查詢中...';
   try {
     if (CFG.gasUrl) {
       const r = await apiGet(`getStockInfo&code=${code}`);
       if (r.success) {
-        if (!nameFld.value) nameFld.value = r.name;
-        for (let i=0; i<sectorFld.options.length; i++) {
-          if (sectorFld.options[i].value === r.sector) { sectorFld.selectedIndex=i; break; }
-        }
-        if (!priceFld.value && r.price>0) priceFld.value = r.price;
+        if (!nf.value) nf.value = r.name;
+        for (let i=0;i<sf.options.length;i++){if(sf.options[i].value===r.sector){sf.selectedIndex=i;break;}}
+        if (!pf.value && r.price>0) pf.value = r.price;
         showToast(`✅ ${r.name} 資料已帶入`,'success');
       } else {
-        nameFld.placeholder = '請手動輸入';
-        showToast('查無此代號，請手動填入','error');
+        nf.placeholder='請手動輸入';
+        showToast('查無此代號','error');
       }
     } else {
-      const demo = {'2330':{name:'台積電',sector:'半導體'},'2454':{name:'聯發科',sector:'半導體'},'2317':{name:'鴻海',sector:'電子'},'2412':{name:'中華電',sector:'其他'},'2882':{name:'國泰金',sector:'金融'}};
-      const info = demo[code];
-      if (info && !nameFld.value) {
-        nameFld.value = info.name;
-        for (let i=0; i<sectorFld.options.length; i++) {
-          if (sectorFld.options[i].value===info.sector) { sectorFld.selectedIndex=i; break; }
-        }
-      }
+      const demo={'2330':{name:'台積電',sector:'半導體'},'2454':{name:'聯發科',sector:'半導體'},'2317':{name:'鴻海',sector:'電子'},'00920':{name:'富邦特選高股息',sector:'其他'}};
+      const info=demo[code];
+      if(info&&!nf.value){nf.value=info.name;for(let i=0;i<sf.options.length;i++){if(sf.options[i].value===info.sector){sf.selectedIndex=i;break;}}}
     }
-  } catch(e) { nameFld.placeholder='請手動輸入'; }
+  } catch(e){nf.placeholder='請手動輸入';}
 }
 
 async function submitAddStock() {
@@ -791,44 +760,44 @@ async function submitAddStock() {
   const shares   = parseInt(document.getElementById('f_shares').value);
   const buyDate  = document.getElementById('f_buyDate').value;
   const sector   = document.getElementById('f_sector').value;
-  const feeRate  = parseFloat(document.getElementById('f_feeRate').value) || 0.001425;
-  const taxRate  = parseFloat(document.getElementById('f_taxRate').value) || 0.003;
+  const feeRate  = parseFloat(document.getElementById('f_feeRate').value)||0.001425;
+  const taxRate  = parseFloat(document.getElementById('f_taxRate').value)||0.003;
   const note     = document.getElementById('f_note').value;
-
-  if (!code||!name||!buyPrice||!shares) { showToast('請填寫所有必填欄位','error'); return; }
-
+  if (!code||!name||!buyPrice||!shares){showToast('請填寫所有必填欄位','error');return;}
   try {
     if (CFG.gasUrl) {
-      const r = await apiPost({ action:'addStock', data:{ code,name,buyPrice,shares,buyDate,sector,feeRate,taxRate,note,currPrice:buyPrice } });
+      const r = await apiPost({action:'addStock',data:{code,name,buyPrice,shares,buyDate,sector,feeRate,taxRate,note,currPrice:buyPrice}});
       if (r.error) throw new Error(r.error);
       showToast(`✅ ${r.message}`,'success');
     } else {
       const bc = buyPrice*shares*(1+feeRate);
-      const existBatches = stocks.filter(s=>s.code===code);
-      const batchNo = existBatches.length > 0 ? Math.max(...existBatches.map(s=>s.batchNo||1))+1 : 1;
-      stocks.push({ rowIndex:stocks.length+2, code,name,buyDate,buyPrice,shares,sector,feeRate,taxRate,currPrice:buyPrice,
-        buyCost:bc, sellValue:buyPrice*shares*(1-feeRate-taxRate), netProfit:0,profitPct:0,holdDays:0,
-        score:65,rating:'⏳ 觀察等待',note,batchNo });
+      const ex = stocks.filter(s=>s.code===code);
+      const batchNo = ex.length>0?Math.max(...ex.map(s=>s.batchNo||1))+1:1;
+      stocks.push({rowIndex:stocks.length+2,code,name,buyDate,buyPrice,shares,sector,feeRate,taxRate,
+        currPrice:buyPrice,buyCost:bc,sellValue:buyPrice*shares*(1-feeRate-taxRate),
+        netProfit:0,profitPct:0,holdDays:0,score:65,rating:'⏳ 觀察等待',note,batchNo});
     }
     closeModal('addModal');
     await loadAll();
-  } catch(e) { showToast('新增失敗：'+e.message,'error'); }
+  } catch(e){showToast('新增失敗：'+e.message,'error');}
 }
 
 // ── Settle ────────────────────────────────────────────────
 function openSettleModal(encoded) {
-  const s = typeof encoded === 'string' ? decodeStock(encoded) : encoded;
+  const s = decodeS(encoded);
   settleTarget = s;
   document.getElementById('settleTitle').textContent = `📤 結算：${s.code} 批次${s.batchNo||1}`;
+  document.getElementById('f_sellShares').value = '';
   document.getElementById('f_sellPrice').value  = '';
   document.getElementById('f_sellReason').value = '';
-  const pct    = s.profitPct||0;
-  const pc     = pct>=0?'pos':'neg';
-  const netStr = (s.netProfit>=0?'+':'')+'$'+(s.netProfit||0).toLocaleString('zh-TW',{maximumFractionDigits:0});
+  const pct = s.profitPct||0;
+  const pc  = pct>=0?'pos':'neg';
+  const net = (s.netProfit>=0?'+':'')+'$'+(s.netProfit||0).toLocaleString('zh-TW',{maximumFractionDigits:0});
   document.getElementById('settleDetail').innerHTML = `
+    <div class="settle-row"><span class="settle-key">持有股數</span><span class="settle-val">${(s.shares||0).toLocaleString()} 股</span></div>
     <div class="settle-row"><span class="settle-key">買入成本</span><span class="settle-val">$${(s.buyCost||0).toLocaleString('zh-TW',{maximumFractionDigits:0})}</span></div>
     <div class="settle-row"><span class="settle-key">現價賣出價值</span><span class="settle-val">$${(s.sellValue||0).toLocaleString('zh-TW',{maximumFractionDigits:0})}</span></div>
-    <div class="settle-row"><span class="settle-key">淨利（扣稅費）</span><span class="settle-val ${pc}">${netStr}</span></div>
+    <div class="settle-row"><span class="settle-key">淨利（扣稅費）</span><span class="settle-val ${pc}">${net}</span></div>
     <div class="settle-row"><span class="settle-key">獲利率</span><span class="settle-val ${pc}">${pct>=0?'+':''}${pct.toFixed(2)}%</span></div>
     <div class="settle-row"><span class="settle-key">持有天數</span><span class="settle-val">${s.holdDays}天</span></div>
     <div class="settle-row"><span class="settle-key">評分</span><span class="settle-val">${s.score}分 · ${s.rating}</span></div>`;
@@ -836,35 +805,47 @@ function openSettleModal(encoded) {
   if (navigator.vibrate) navigator.vibrate(30);
 }
 
+function setSellRatio(ratio) {
+  if (!settleTarget) return;
+  const total = settleTarget.shares || 0;
+  const sell  = ratio >= 1 ? total
+    : Math.max(1, Math.floor(total*ratio/1000)*1000 || Math.floor(total*ratio));
+  document.getElementById('f_sellShares').value = sell;
+  if (navigator.vibrate) navigator.vibrate(10);
+}
+
 async function confirmSettle() {
   if (!settleTarget) return;
-  const s = settleTarget;
-  const sellPrice = parseFloat(document.getElementById('f_sellPrice').value) || s.currPrice;
-  const reason    = document.getElementById('f_sellReason').value || '手動結算';
+  const s          = settleTarget;
+  const sellShares = parseInt(document.getElementById('f_sellShares').value) || s.shares;
+  const sellPrice  = parseFloat(document.getElementById('f_sellPrice').value) || s.currPrice;
+  const reason     = document.getElementById('f_sellReason').value || '手動結算';
   const btn = document.getElementById('settleDangerBtn');
   btn.textContent = '處理中...';
   btn.disabled = true;
 
   try {
     if (CFG.gasUrl) {
-      const r = await apiPost({ action:'sellStock', data:{ rowIndex:s.rowIndex, sellPrice, reason } });
+      const r = await apiPost({action:'sellStock',data:{rowIndex:s.rowIndex,sellPrice,sellShares,reason}});
       if (r.error) throw new Error(r.error);
+      showToast(r.message,'success');
     } else {
-      const idx = stocks.findIndex(x => x.code===s.code && x.batchNo===s.batchNo);
-      if (idx !== -1) stocks.splice(idx,1);
-      historyData.push({ ...s, sellDate:todayStr(), sellPrice, reason });
+      const idx = stocks.findIndex(x=>x.code===s.code&&x.batchNo===s.batchNo);
+      if (idx!==-1){
+        if (sellShares>=s.shares){ stocks.splice(idx,1); }
+        else { stocks[idx].shares -= sellShares; stocks[idx].holdDays=0; }
+      }
+      historyData.push({...s,sellDate:todayStr(),sellPrice,reason});
     }
-    showToast(`💰 ${s.code} 批次${s.batchNo||1} 結算完成`,'success');
     closeModal('settleModal');
     settleTarget = null;
     if (navigator.vibrate) navigator.vibrate([50,30,50]);
-    if (CFG.gasUrl) { await loadAll(); }
-    else { renderMonitor(); renderHistory(); renderStats(); }
-  } catch(e) {
+    if (CFG.gasUrl){ await loadAll(); } else { renderMonitor();renderHistory();renderStats(); }
+  } catch(e){
     showToast('結算失敗：'+e.message,'error');
   } finally {
-    btn.textContent = '💰 確認結算';
-    btn.disabled = false;
+    btn.textContent='💰 確認結算';
+    btn.disabled=false;
   }
 }
 
@@ -880,63 +861,60 @@ function openNumpad(targetId, label) {
   document.getElementById('numpadVal').textContent   = npVal;
   document.getElementById('numpadOverlay').classList.add('open');
 }
-function closeNumpad() {
-  document.getElementById('numpadOverlay').classList.remove('open');
+function closeNumpad(){ document.getElementById('numpadOverlay').classList.remove('open'); }
+function nk(char){
+  if(navigator.vibrate)navigator.vibrate(8);
+  if(char==='.'&&npVal.includes('.'))return;
+  if(npVal==='0'&&char!=='.')npVal=char; else npVal+=char;
+  if(npVal.length>12)return;
+  document.getElementById('numpadVal').textContent=npVal;
 }
-function nk(char) {
-  if (navigator.vibrate) navigator.vibrate(8);
-  if (char==='.' && npVal.includes('.')) return;
-  if (npVal==='0' && char!=='.') npVal = char;
-  else npVal += char;
-  if (npVal.length > 12) return;
-  document.getElementById('numpadVal').textContent = npVal;
+function nkDel(){
+  if(navigator.vibrate)navigator.vibrate(8);
+  npVal=npVal.length<=1?'0':npVal.slice(0,-1);
+  document.getElementById('numpadVal').textContent=npVal;
 }
-function nkDel() {
-  if (navigator.vibrate) navigator.vibrate(8);
-  npVal = npVal.length <= 1 ? '0' : npVal.slice(0,-1);
-  document.getElementById('numpadVal').textContent = npVal;
-}
-function nkDone() {
-  if (npTarget) document.getElementById(npTarget).value = npVal;
+function nkDone(){
+  if(npTarget)document.getElementById(npTarget).value=npVal;
   closeNumpad();
-  if (navigator.vibrate) navigator.vibrate(20);
+  if(navigator.vibrate)navigator.vibrate(20);
 }
 
 // ── Config ────────────────────────────────────────────────
-function saveGasUrl(v) { CFG.gasUrl=v.trim(); localStorage.setItem('riab_gas_url',v.trim()); }
-function saveGasKey(v) { CFG.gasKey=v.trim(); localStorage.setItem('riab_gas_key',v.trim()); }
+function saveGasUrl(v){CFG.gasUrl=v.trim();localStorage.setItem('riab_gas_url',v.trim());}
+function saveGasKey(v){CFG.gasKey=v.trim();localStorage.setItem('riab_gas_key',v.trim());}
 
-async function testConnection() {
-  if (!CFG.gasUrl) { showToast('請先填入 GAS URL','error'); return; }
+async function testConnection(){
+  if(!CFG.gasUrl){showToast('請先填入 GAS URL','error');return;}
   showToast('測試連線中...','info');
-  try {
-    const r = await apiGet('getConfig');
-    if (r.error) throw new Error(r.error);
+  try{
+    const r=await apiGet('getConfig');
+    if(r.error)throw new Error(r.error);
     showToast('✅ 連線成功！','success');
-    document.getElementById('systemInfo').innerHTML = `
+    document.getElementById('systemInfo').innerHTML=`
       <div class="cfg-item"><div class="cfg-key">CNN 貪婪恐懼指數</div><div class="cfg-val">${r.cnnIndex||'--'}</div></div>
       <div class="cfg-item"><div class="cfg-key">費半單日漲跌%</div><div class="cfg-val">${r.soxDropPct?Number(r.soxDropPct).toFixed(2)+'%':'--'}</div></div>
       <div class="cfg-item"><div class="cfg-key">最後同步時間</div><div class="cfg-val" style="font-size:11px">${r.lastUpdate||'--'}</div></div>`;
-  } catch(e) { showToast('連線失敗：'+e.message,'error'); }
+  }catch(e){showToast('連線失敗：'+e.message,'error');}
 }
 
 // ── Toast ─────────────────────────────────────────────────
 let _tt;
-function showToast(msg, type='info') {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = `toast ${type} show`;
+function showToast(msg,type='info'){
+  const el=document.getElementById('toast');
+  el.textContent=msg;
+  el.className=`toast ${type} show`;
   clearTimeout(_tt);
-  _tt = setTimeout(() => el.classList.remove('show'), 3000);
+  _tt=setTimeout(()=>el.classList.remove('show'),3000);
 }
 
 // ── Demo Data ─────────────────────────────────────────────
-function demoData() {
+function demoData(){
   return [
-    { rowIndex:2, code:'2330',name:'台積電',buyDate:'2026/03/10',buyPrice:850,shares:1000,sector:'半導體',feeRate:.001425,taxRate:.003,currPrice:1005,buyCost:851211,sellValue:999914,netProfit:148703,profitPct:17.47,holdDays:7,score:32,rating:'🔥 強烈建議收割',note:'',batchNo:1 },
-    { rowIndex:3, code:'2330',name:'台積電',buyDate:'2026/03/14',buyPrice:960,shares:500,sector:'半導體',feeRate:.001425,taxRate:.003,currPrice:1005,buyCost:481369,sellValue:499957,netProfit:18588,profitPct:3.86,holdDays:3,score:32,rating:'🔥 強烈建議收割',note:'追買',batchNo:2 },
-    { rowIndex:4, code:'2454',name:'聯發科',buyDate:'2026/02/01',buyPrice:1200,shares:500,sector:'半導體',feeRate:.001425,taxRate:.003,currPrice:1280,buyCost:601711,sellValue:635457,netProfit:33746,profitPct:5.61,holdDays:44,score:58,rating:'⏳ 觀察等待',note:'',batchNo:1 },
-    { rowIndex:5, code:'2412',name:'中華電',buyDate:'2026/01/15',buyPrice:115,shares:2000,sector:'其他',feeRate:.001425,taxRate:.003,currPrice:123,buyCost:230327,sellValue:244310,netProfit:13982,profitPct:6.07,holdDays:61,score:72,rating:'💎 理性持有',note:'電信穩定',batchNo:1 }
+    {rowIndex:2,code:'2330',name:'台積電',buyDate:'2026/03/10',buyPrice:850,shares:1000,sector:'半導體',feeRate:.001425,taxRate:.003,currPrice:1005,buyCost:851211,sellValue:999914,netProfit:148703,profitPct:17.47,holdDays:7,score:32,rating:'🔥 強烈建議收割',note:'',batchNo:1},
+    {rowIndex:3,code:'2330',name:'台積電',buyDate:'2026/03/14',buyPrice:960,shares:500,sector:'半導體',feeRate:.001425,taxRate:.003,currPrice:1005,buyCost:481369,sellValue:499957,netProfit:18588,profitPct:3.86,holdDays:3,score:32,rating:'🔥 強烈建議收割',note:'追買',batchNo:2},
+    {rowIndex:4,code:'2454',name:'聯發科',buyDate:'2026/02/01',buyPrice:1200,shares:500,sector:'半導體',feeRate:.001425,taxRate:.003,currPrice:1280,buyCost:601711,sellValue:635457,netProfit:33746,profitPct:5.61,holdDays:44,score:58,rating:'⏳ 觀察等待',note:'',batchNo:1},
+    {rowIndex:5,code:'00920',name:'富邦特選高股息',buyDate:'2026/01/15',buyPrice:22,shares:5000,sector:'其他',feeRate:.001425,taxRate:.003,currPrice:23.5,buyCost:110157,sellValue:116977,netProfit:6820,profitPct:6.19,holdDays:61,score:72,rating:'💎 理性持有',note:'股息標的',batchNo:1}
   ];
 }
 </script>
