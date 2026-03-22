@@ -448,11 +448,10 @@ async function apiGet(action) {
 }
 async function apiPost(body) {
   if (!CFG.gasUrl) throw new Error('請先在設定頁填入 GAS URL');
-  const r = await fetch(`${CFG.gasUrl}?key=${CFG.gasKey}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
-  });
+  // 改用 GET + payload 參數，完全繞過 CORS 問題
+  const payload = encodeURIComponent(JSON.stringify(body));
+  const url = `${CFG.gasUrl}?key=${CFG.gasKey}&payload=${payload}&t=${Date.now()}`;
+  const r = await fetch(url);
   return r.json();
 }
 
@@ -680,11 +679,8 @@ async function forceSync() {
 async function triggerFullRefresh() {
   showToast('完整更新觸發中...','info');
   try {
-    fetch(`${CFG.gasUrl}?key=${CFG.gasKey}`, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({action:'forceRefresh'})
-    }).catch(()=>{});
+    const _p = encodeURIComponent(JSON.stringify({action:'forceRefresh'}));
+    fetch(`${CFG.gasUrl}?key=${CFG.gasKey}&payload=${_p}&t=${Date.now()}`).catch(()=>{});
     showToast('⏳ GAS 運算中，35秒後自動載入...','info');
     setTimeout(async()=>{
       await loadAll();
